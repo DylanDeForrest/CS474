@@ -10,7 +10,7 @@ char physical_ram[65536];
  */
 int get_page_start_addr(int page)
 {
-    return page * PAGE_SIZE;
+    // TODO
 }
 
 /*
@@ -20,9 +20,7 @@ int get_page_start_addr(int page)
  */
 int get_page_table_entry(int ppage, int entry)
 {
-    int entry_addr = get_page_start_addr(ppage) + (entry * sizeof(int));
-
-    return *(int*)(physical_ram + entry_addr);
+    // TODO
 }
 
 /*
@@ -31,11 +29,8 @@ int get_page_table_entry(int ppage, int entry)
  */
 void set_page_table_entry(int ppage, int entry, int value)
 {
-    int entry_addr = get_page_start_addr(ppage) + (entry * sizeof(int));
-    *(int*)(physical_ram + entry_addr) = value;
-
+    // TODO
 }
-
 
 /*
  * For a given virtual address, follows the two-level page table and
@@ -44,22 +39,7 @@ void set_page_table_entry(int ppage, int entry, int value)
  */
 int vaddr_to_paddr(int dir_page_num, int vaddr)
 {
-    int dir_idx = (vaddr >> 16) & 0xFF;
-    int table_idx = (vaddr >> 8) & 0xFF;
-    int offset = vaddr & 0xFF;
-
-    // 1. Get Page Table Page Number from Directory
-    int table_page_num = get_page_table_entry(dir_page_num, dir_idx);
-    
-    if (table_page_num == 0) return 0; // Page Fault
-
-    // 2. Get Physical Page Number from Page Table
-    int phys_page_num = get_page_table_entry(table_page_num, table_idx);
-    
-    if (phys_page_num == 0) return 0; // Page Fault
-
-    // 3. Calculate final physical address
-    return get_page_start_addr(phys_page_num) + offset;
+    // TODO
 }
 
 /*
