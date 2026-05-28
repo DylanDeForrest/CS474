@@ -1,0 +1,20 @@
+# Object files
+*.o
+
+# Static libraries
+*.a
+
+# Executables
+testfs
+
+# Test image files
+*.bin
+test_image.bin
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
