@@ -4,24 +4,19 @@ AR = ar
 ARFLAGS = rcs
 
 # Source files
-LIB_SRCS = image.c block.c
+LIB_SRCS = image.c block.c free.c inode.c mkfs.c
 LIB_OBJS = $(LIB_SRCS:.c=.o)
-LIB_TARGET = libvvsfs.a
 
 TEST_SRCS = testfs.c
 TEST_OBJS = $(TEST_SRCS:.c=.o)
 TEST_TARGET = testfs
 
 # Default target
-all: $(LIB_TARGET) $(TEST_TARGET)
-
-# Build static library
-$(LIB_TARGET): $(LIB_OBJS)
-	$(AR) $(ARFLAGS) $@ $^
+all: $(TEST_TARGET)
 
 # Build test executable
-$(TEST_TARGET): $(TEST_OBJS) $(LIB_TARGET)
-	$(CC) $(CFLAGS) -o $@ $(TEST_OBJS) $(LIB_TARGET)
+$(TEST_TARGET): $(TEST_OBJS) $(LIB_OBJS)
+	$(CC) $(CFLAGS) -o $@ $(TEST_OBJS) $(LIB_OBJS)
 
 # Compile source files to object files
 %.o: %.c
@@ -35,12 +30,12 @@ testfs.o: testfs.c
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
 
-# Clean object files and static library
+# Clean object files
 clean:
 	rm -f $(LIB_OBJS) $(TEST_OBJS)
 
-# Clean everything including executables and libraries
+# Clean everything including executables
 pristine: clean
-	rm -f $(LIB_TARGET) $(TEST_TARGET)
+	rm -f $(TEST_TARGET)
 
 .PHONY: all test clean pristine

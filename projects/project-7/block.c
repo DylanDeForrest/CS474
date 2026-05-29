@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include "block.h"
+#include "free.h"
 #include "image.h"
 
 unsigned char *bread(int block_num, unsigned char *block)

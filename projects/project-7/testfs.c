@@ -5,6 +5,9 @@
 #include "ctest.h"
 #include "image.h"
 #include "block.h"
+#include "free.h"
+#include "inode.h"
+#include "mkfs.h"
 
 #define TEST_IMAGE "test_image.bin"
 
@@ -116,6 +119,61 @@ void test_block_1(void)
 	CTEST_ASSERT(1, "block 1 write");
 }
 
+void test_set_free(void)
+{
+	unsigned char block[BLOCK_SIZE];
+	int i = 0;
+	while (i < BLOCK_SIZE) {
+		block[i] = 0;
+		i = i + 1;
+	}
+	set_free(block, 5, 1);
+	CTEST_ASSERT(block[0] == 32, "bit 5 set");
+}
+
+void test_find_free(void)
+{
+	unsigned char block[BLOCK_SIZE];
+	int i = 0;
+	while (i < BLOCK_SIZE) {
+		block[i] = 0;
+		i = i + 1;
+	}
+	int x = find_free(block);
+	CTEST_ASSERT(x == 0, "find first free");
+}
+
+void test_ialloc_basic(void)
+{
+	unlink(TEST_IMAGE);
+	image_open(TEST_IMAGE, 1);
+	mkfs();
+	int x = ialloc();
+	CTEST_ASSERT(x >= 0, "ialloc works");
+	image_close();
+}
+
+void test_alloc_basic(void)
+{
+	unlink(TEST_IMAGE);
+	image_open(TEST_IMAGE, 1);
+	mkfs();
+	int x = alloc();
+	CTEST_ASSERT(x >= 0, "alloc works");
+	image_close();
+}
+
+void test_mkfs_basic(void)
+{
+	unlink(TEST_IMAGE);
+	image_open(TEST_IMAGE, 1);
+	mkfs();
+	unsigned char b[BLOCK_SIZE];
+	bread(2, b);
+	CTEST_ASSERT(b[0] == 0x7F, "mkfs writes block map");
+	image_close();
+}
+
 int main(void)
 {
 	CTEST_COLOR(1);
@@ -128,6 +186,11 @@ int main(void)
 	test_write_and_read();
 	test_block_0();
 	test_block_1();
+	test_set_free();
+	test_find_free();
+	test_ialloc_basic();
+	test_alloc_basic();
+	test_mkfs_basic();
 	CTEST_RESULTS();
 	CTEST_EXIT();
 	return 0;
